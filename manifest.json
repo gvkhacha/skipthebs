@@ -7,5 +7,9 @@
             "matches": ["*://damndelicious.net/*"],
             "js": ["content.js"]
         }
-    ]
+    ],
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_title": "Skip the BS"
+    }
 }
