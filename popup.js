@@ -20,6 +20,8 @@ function initText(){
 
 function initBtn(){
     const websiteToggle = document.getElementById("blockWebsiteToggle");
+    const refreshBtn = document.getElementById("refreshBtn");
+
     const match = HOSTNAME_RE.exec(url);
     if(match == undefined || match[2] == undefined){
         console.log("INVALID_URL");
@@ -29,11 +31,20 @@ function initBtn(){
         websiteToggle.onchange = (e) => {
             let entry = {};
             entry[hostname] = e.target.checked;
-            chrome.storage.sync.set(entry);
+            chrome.storage.sync.set(entry, () => {
+                const refreshDiv = document.getElementById("refreshPrompt");
+                refreshDiv.style.display = "block";
+            });
         }
         chrome.storage.sync.get([hostname], function(result) {
             websiteToggle.checked = result[hostname];
         });
+    }
+
+    refreshBtn.onclick = () => {
+        chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+            chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+        })
     }
 }
 
