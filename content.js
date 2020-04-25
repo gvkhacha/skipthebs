@@ -11,7 +11,7 @@ const filterFunctions = {
 }
 
 chrome.storage.sync.get(url, (result) => {
-    if(result[url]){
+    if(result[url] == undefined || result[url]){ // only if its explicitly false
         const parentElement = document.querySelector(parentQuerySelector[url]);
         console.log(parentElement);
         if(parentElement == undefined){
