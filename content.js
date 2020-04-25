@@ -1,8 +1,19 @@
 const url = window.location.hostname;
+
+const parentQuerySelector = {
+    "damndelicious.net": "div#content > article.post",
+    "www.thekitchn.com": "article.Post--withRecipe"
+}
+
+const filterFunctions = {
+    "damndelicious.net": (element) => !element.className.split(" ").includes("recipe"),
+    "www.thekitchn.com": (element) => !(element.className.split(" ").includes("Post__recipe") || element.className.split(" ").includes("Post__item--first"))
+}
+
 chrome.storage.sync.get(url, (result) => {
     if(result[url]){
-        const parentElement = document.querySelector("div#content > article.post");
-
+        const parentElement = document.querySelector(parentQuerySelector[url]);
+        console.log(parentElement);
         if(parentElement == undefined){
             chrome.runtime.sendMessage({
                 from: "content",
@@ -11,7 +22,7 @@ chrome.storage.sync.get(url, (result) => {
         }
         
         const bodyElements = [...parentElement.children];
-        const removed = bodyElements.filter(child => !child.className.split(" ").includes("recipe"));
+        const removed = bodyElements.filter(filterFunctions[url]);
         
         removed.forEach(child => child.remove());
         
@@ -22,8 +33,3 @@ chrome.storage.sync.get(url, (result) => {
         })
     }
 })
-
-
-
-
-
