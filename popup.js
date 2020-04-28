@@ -35,6 +35,8 @@ function initBtn(){
     const match = HOSTNAME_RE.exec(url);
     if(match == undefined || match[2] == undefined){
         console.log("INVALID_URL");
+        const blockPrompt = document.getElementById("blockPrompt");
+        blockPrompt.style.display = "none";
     }else{
         const hostname = match[2]
 
